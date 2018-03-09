@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+		
+	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />	
+	<bean id="soapFaultObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+	<context:component-scan base-package="ebe.customer.migration.opportunitylines" />
+	<oxm:jaxb2-marshaller id="opportunityInterfaceMarshaller" contextPath="be.ebts.schemas._2014._05.qe" />
+	<bean id="opportunityInterfaceWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+		<constructor-arg ref="messageFactory" />
+		<property name="marshaller" ref="opportunityInterfaceMarshaller" />
+		<property name="unmarshaller" ref="opportunityInterfaceMarshaller" />
+		<property name="defaultUri" value="${uri.opportunityinterface}" />
+		<property name="faultMessageResolver">
+			<bean class="ebe.commons.exceptions.util.DefaultSoapFaultMessageResolver" c:mapper-ref="soapFaultObjectMapper"/>
+		</property>
+		<property name="interceptors">
+			<bean class="ebe.commons.security.client.SecurityContextClientInterceptor"/>
+		</property>
+	</bean>
+</beans>

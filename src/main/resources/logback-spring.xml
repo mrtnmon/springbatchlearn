@@ -1,0 +1,6 @@
+<configuration debug="true" scan="true" scanPeriod="30 seconds">
+	<contextName>eepi-opportunities</contextName>
+
+	<include file="${logConfiguration}/logback-appenders-2.xml" />
+	<include file="${logConfiguration}/logback-${CONTEXT_NAME}.xml" />
+</configuration>
